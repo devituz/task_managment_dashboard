@@ -18,10 +18,10 @@
             @endif
 
             <div class="mb-4 text-center">
-                <div class="position-relative d-inline-block">
-                    <img id="avatarPreview" src="{{ $employee->avatar_url ?? 'https://ui-avatars.com/api/?name=New+User&color=4f46e5&background=eef2ff' }}" class="rounded-circle shadow-sm" style="width: 100px; height: 100px; object-fit: cover; border: 3px solid var(--card-bg);">
-                    <label for="avatar" class="position-absolute bottom-0 end-0 bg-primary text-white rounded-circle d-flex align-items-center justify-content-center cursor-pointer shadow" style="width: 32px; height: 32px; cursor: pointer; border: 2px solid var(--card-bg);">
-                        <i class="bi bi-camera"></i>
+                <div class="position-relative d-inline-block p-1 rounded-circle" style="background: linear-gradient(135deg, var(--primary-color), #818cf8);">
+                    <img id="avatarPreview" src="{{ $employee->avatar_url ?? 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y' }}" class="rounded-circle shadow-sm" style="width: 120px; height: 120px; object-fit: cover; border: 4px solid var(--card-bg);">
+                    <label for="avatar" class="position-absolute bottom-0 end-0 bg-primary text-white rounded-circle d-flex align-items-center justify-content-center shadow-lg border border-2 border-white" style="width: 36px; height: 36px; cursor: pointer; transform: translate(-10%, -10%);">
+                        <i class="bi bi-camera-fill"></i>
                     </label>
                     <input type="file" name="avatar" id="avatar" class="d-none" accept="image/*" onchange="previewAvatar(event)">
                 </div>

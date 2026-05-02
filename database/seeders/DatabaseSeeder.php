@@ -38,10 +38,23 @@ class DatabaseSeeder extends Seeder
         );
         $employees->push($testEmployee);
 
-        // 3. Tasklar yaratish (Har bir employee uchun o'rtacha 5-8 ta task)
+        // 3. Tasklar yaratish
         $allUsers = User::all();
 
+        // Ali Valiyev uchun maxsus har bir statusdan 5 tadan task yaratish
+        foreach (Task::STATUSES as $status) {
+            Task::factory(5)->create([
+                'user_id' => $testEmployee->id,
+                'created_by' => $admin->id,
+                'status' => $status,
+                'start_date' => now()->subDays(rand(1, 10)),
+            ]);
+        }
+
+        // Qolgan xodimlar uchun oddiygina tasklar yaratish
         foreach ($employees as $emp) {
+            if ($emp->id === $testEmployee->id) continue;
+
             $tasks = Task::factory(rand(5, 8))->create([
                 'user_id' => $emp->id,
                 'created_by' => $admin->id,

@@ -12,6 +12,23 @@
     </a>
 </div>
 
+<!-- Search Filter -->
+<div class="card mb-4 p-2">
+    <div class="card-body">
+        <form action="{{ route('employees.index') }}" method="GET" class="row g-3">
+            <div class="col-lg-11 col-md-10">
+                <div class="input-group">
+                    <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-search text-muted"></i></span>
+                    <input type="text" name="search" class="form-control border-start-0" placeholder="{{ __('app.search') }}" value="{{ request('search') }}">
+                </div>
+            </div>
+            <div class="col-lg-1 col-md-2">
+                <button type="submit" class="btn btn-primary w-100"><i class="bi bi-filter"></i></button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="card overflow-hidden">
     <div class="table-responsive">
         <table class="table table-hover align-middle mb-0">

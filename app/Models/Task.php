@@ -100,6 +100,10 @@ class Task extends Model
             'complete' => [],
         ];
 
+        if ($this->status === $status) {
+            return true;
+        }
+
         return in_array($status, $transitions[$this->status] ?? [], true);
     }
 }

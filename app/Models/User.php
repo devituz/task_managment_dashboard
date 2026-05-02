@@ -46,9 +46,8 @@ class User extends Authenticatable
             return asset('storage/' . $this->avatar);
         }
 
-        // Return a beautiful generated avatar based on the user's name
-        $name = urlencode($this->name);
-        return "https://ui-avatars.com/api/?name={$name}&color=4f46e5&background=eef2ff&bold=true&font-size=0.4";
+        // Return a generic user icon placeholder
+        return "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
     }
 
     /**

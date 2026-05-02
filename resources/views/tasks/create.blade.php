@@ -129,5 +129,28 @@
     [data-bs-theme="dark"] .ts-dropdown { background-color: var(--card-bg); color: var(--text-main); border-color: var(--border-color); }
     [data-bs-theme="dark"] .ts-dropdown .option.active { background-color: var(--input-bg); color: var(--text-main); }
     [data-bs-theme="dark"] .ts-control > input { color: var(--text-main); }
+    
+    /* CKEditor Dark Mode Fix */
+    [data-bs-theme="dark"] .ck.ck-editor__main > .ck-editor__editable {
+        background: var(--input-bg) !important;
+        color: var(--text-main) !important;
+        border-color: var(--border-color) !important;
+    }
+    [data-bs-theme="dark"] .ck.ck-toolbar {
+        background: var(--card-bg) !important;
+        border-color: var(--border-color) !important;
+    }
+    [data-bs-theme="dark"] .ck.ck-toolbar .ck-button {
+        color: var(--text-main) !important;
+    }
+    [data-bs-theme="dark"] .ck.ck-toolbar .ck-button:hover {
+        background: var(--input-bg) !important;
+    }
+    [data-bs-theme="dark"] .ck.ck-list {
+        background: var(--card-bg) !important;
+    }
+    [data-bs-theme="dark"] .ck.ck-list__item .ck-button:hover:not(.ck-disabled) {
+        background: var(--input-bg) !important;
+    }
 </style>
 @endsection

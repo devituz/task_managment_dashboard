@@ -15,10 +15,20 @@ class EmployeeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
+        $query = User::latest();
+
+        $query->when($request->filled('search'), function ($query) use ($request) {
+            $search = '%' . $request->string('search')->toString() . '%';
+            $query->where(function ($query) use ($search) {
+                $query->where('name', 'like', $search)
+                      ->orWhere('email', 'like', $search);
+            });
+        });
+
         return view('employees.index', [
-            'employees' => User::latest()->paginate(12),
+            'employees' => $query->paginate(12)->withQueryString(),
         ]);
     }
 

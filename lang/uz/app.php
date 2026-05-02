@@ -2,7 +2,7 @@
 
 return [
     // App
-    'app_name' => 'TaskPro',
+    'app_name' => config('app.name'),
     'welcome' => 'Xush kelibsiz',
     'login_hint' => 'Tizimga kirish uchun ma\'lumotlarni kiriting',
     'email' => 'Elektron pochta',
