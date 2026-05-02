@@ -30,7 +30,7 @@
                 </div>
 
                 <h6 class="fw-bold text-muted text-uppercase small mb-2">{{ __('app.description') }}</h6>
-                <div class="p-3 rounded bg-light ck-content">
+                <div class="p-3 rounded bg-body-tertiary ck-content">
                     {!! $task->description ?: __('app.no_data') !!}
                 </div>
             </div>
@@ -47,7 +47,7 @@
                         <div class="d-flex align-items-center">
                             <i class="bi bi-file-earmark-text text-secondary fs-4 me-3"></i>
                             <div>
-                                <a href="{{ Storage::url($file->file_path) }}" target="_blank" class="text-decoration-none fw-medium text-dark d-block">
+                                <a href="{{ Storage::url($file->file_path) }}" target="_blank" class="text-decoration-none fw-medium text-body d-block">
                                     {{ $file->file_name }}
                                 </a>
                                 <small class="text-muted">{{ number_format($file->file_size / 1024, 2) }} KB • Uploaded by {{ $file->uploader->name }}</small>
@@ -68,7 +68,7 @@
         @endif
 
         <!-- File Upload Form (optional inside show) -->
-        <div class="card border-0 shadow-sm mb-4 bg-light">
+        <div class="card border-0 shadow-sm mb-4 bg-body-tertiary">
             <div class="card-body p-3">
                 <form action="{{ route('tasks.files.store', $task) }}" method="POST" enctype="multipart/form-data" class="d-flex align-items-center gap-2">
                     @csrf
@@ -86,16 +86,14 @@
                 @foreach($task->comments as $comment)
                 <div class="d-flex mb-4">
                     <div class="flex-shrink-0 me-3">
-                        <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                            {{ substr($comment->user->name, 0, 2) }}
-                        </div>
+                        <img src="{{ $comment->user->avatar_url }}" class="rounded-circle border shadow-sm" style="width: 40px; height: 40px; object-fit: cover;">
                     </div>
-                    <div class="flex-grow-1 bg-light p-3 rounded">
+                    <div class="flex-grow-1 bg-body-tertiary p-3 rounded">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <h6 class="mb-0 fw-bold fs-6">{{ $comment->user->name }}</h6>
                             <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
                         </div>
-                        <p class="mb-0 text-dark" style="white-space: pre-line;">{{ $comment->comment }}</p>
+                        <p class="mb-0 text-body" style="white-space: pre-line;">{{ $comment->comment }}</p>
                     </div>
                 </div>
                 @endforeach
@@ -146,9 +144,7 @@
                 <h6 class="fw-bold text-muted text-uppercase small mb-3">{{ __('app.task_info') }}</h6>
                 
                 <div class="d-flex align-items-center mb-3">
-                    <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                        {{ substr($task->employee->name, 0, 2) }}
-                    </div>
+                    <img src="{{ $task->employee->avatar_url }}" class="rounded-circle border shadow-sm me-3" style="width: 40px; height: 40px; object-fit: cover;">
                     <div>
                         <div class="small text-muted mb-1">{{ __('app.assigned_to') }}</div>
                         <div class="fw-medium">{{ $task->employee->name }}</div>
@@ -156,7 +152,7 @@
                 </div>
                 
                 <div class="d-flex align-items-center mb-3">
-                    <div class="bg-light text-secondary rounded-circle d-flex align-items-center justify-content-center me-3 border" style="width: 40px; height: 40px;">
+                    <div class="bg-body-tertiary text-secondary rounded-circle d-flex align-items-center justify-content-center me-3 border" style="width: 40px; height: 40px;">
                         <i class="bi bi-person"></i>
                     </div>
                     <div>
@@ -168,10 +164,18 @@
                 <hr>
 
                 <div class="mb-3">
-                    <div class="small text-muted mb-1">{{ __('app.deadline') }}</div>
+                    <div class="small text-muted mb-1">{{ __('app.start_date') }}</div>
+                    <div class="fw-medium">
+                        <i class="bi bi-play-circle text-primary"></i> 
+                        {{ $task->start_date ? $task->start_date->format('d F Y, H:i') : __('app.no_data') }}
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="small text-muted mb-1">{{ __('app.deadline_optional') }}</div>
                     <div class="fw-medium {{ $task->deadline && $task->deadline->isPast() && $task->status !== 'complete' ? 'text-danger' : '' }}">
-                        <i class="bi bi-calendar3"></i> 
-                        {{ $task->deadline ? \Carbon\Carbon::parse($task->deadline)->format('d F Y') : __('app.no_deadline') }}
+                        <i class="bi bi-clock-history"></i> 
+                        {{ $task->deadline ? $task->deadline->format('d F Y, H:i') : __('app.no_deadline') }}
                         @if($task->deadline && $task->deadline->isPast() && $task->status !== 'complete')
                             <span class="badge bg-danger ms-2">{{ __('app.overdue') }}</span>
                         @endif

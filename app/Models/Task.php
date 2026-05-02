@@ -18,6 +18,7 @@ class Task extends Model
         'created_by',
         'priority',
         'status',
+        'start_date',
         'deadline',
     ];
 
@@ -28,7 +29,8 @@ class Task extends Model
     protected function casts(): array
     {
         return [
-            'deadline' => 'date',
+            'start_date' => 'datetime',
+            'deadline' => 'datetime',
         ];
     }
 

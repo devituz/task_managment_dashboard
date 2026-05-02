@@ -39,10 +39,10 @@
             <div class="row g-3 mb-4">
                 <div class="col-md-6">
                     <label class="form-label fw-medium">{{ __('app.assign_to') }}</label>
-                    <select name="user_id" class="form-select @error('user_id') is-invalid @enderror" required>
+                    <select name="user_id" id="user_id_select" class="form-select @error('user_id') is-invalid @enderror" required>
                         <option value="">{{ __('app.select_employee') }}</option>
                         @foreach($employees as $emp)
-                            <option value="{{ $emp->id }}" @selected(old('user_id', $task->user_id ?? '') == $emp->id)>{{ $emp->name }}</option>
+                            <option value="{{ $emp->id }}" data-avatar="{{ $emp->avatar_url }}" @selected(old('user_id', $task->user_id ?? '') == $emp->id)>{{ $emp->name }}</option>
                         @endforeach
                     </select>
                     @error('user_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -69,8 +69,14 @@
                 </div>
 
                 <div class="col-md-6">
+                    <label class="form-label fw-medium">{{ __('app.start_date') }}</label>
+                    <input type="datetime-local" name="start_date" class="form-control @error('start_date') is-invalid @enderror" value="{{ old('start_date', isset($task->start_date) ? \Carbon\Carbon::parse($task->start_date)->format('Y-m-d\TH:i') : '') }}">
+                    @error('start_date') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                </div>
+
+                <div class="col-md-6">
                     <label class="form-label fw-medium">{{ __('app.deadline_optional') }}</label>
-                    <input type="date" name="deadline" class="form-control @error('deadline') is-invalid @enderror" value="{{ old('deadline', isset($task->deadline) ? \Carbon\Carbon::parse($task->deadline)->format('Y-m-d') : '') }}">
+                    <input type="datetime-local" name="deadline" class="form-control @error('deadline') is-invalid @enderror" value="{{ old('deadline', isset($task->deadline) ? \Carbon\Carbon::parse($task->deadline)->format('Y-m-d\TH:i') : '') }}">
                     @error('deadline') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
             </div>
@@ -87,6 +93,28 @@
 @endsection
 
 @section('scripts')
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if (document.getElementById('user_id_select')) {
+            new TomSelect('#user_id_select', {
+                render: {
+                    option: function(data, escape) {
+                        var avatar = data.$option ? data.$option.getAttribute('data-avatar') : null;
+                        if (!avatar) return `<div>${escape(data.text)}</div>`;
+                        return `<div><img class="rounded-circle me-2 border shadow-sm" style="width:24px;height:24px;object-fit:cover;" src="${avatar}"> <span class="align-middle">${escape(data.text)}</span></div>`;
+                    },
+                    item: function(data, escape) {
+                        var avatar = data.$option ? data.$option.getAttribute('data-avatar') : null;
+                        if (!avatar) return `<div>${escape(data.text)}</div>`;
+                        return `<div><img class="rounded-circle me-2 border shadow-sm" style="width:20px;height:20px;object-fit:cover;" src="${avatar}"> <span class="align-middle">${escape(data.text)}</span></div>`;
+                    }
+                }
+            });
+        }
+    });
+</script>
 <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 <script>
     ClassicEditor
@@ -97,5 +125,9 @@
 </script>
 <style>
     .ck-editor__editable { min-height: 200px; }
+    [data-bs-theme="dark"] .ts-control { background-color: var(--input-bg); color: var(--text-main); border-color: var(--border-color); }
+    [data-bs-theme="dark"] .ts-dropdown { background-color: var(--card-bg); color: var(--text-main); border-color: var(--border-color); }
+    [data-bs-theme="dark"] .ts-dropdown .option.active { background-color: var(--input-bg); color: var(--text-main); }
+    [data-bs-theme="dark"] .ts-control > input { color: var(--text-main); }
 </style>
 @endsection

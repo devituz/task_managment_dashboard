@@ -341,5 +341,6 @@
             setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 400); }, 5000);
         }
     </script>
+    @yield('scripts')
 </body>
 </html>

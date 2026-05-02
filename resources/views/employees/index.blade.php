@@ -29,9 +29,7 @@
                 <tr>
                     <td class="px-4 py-3">
                         <div class="d-flex align-items-center gap-3">
-                            <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 40px; height: 40px; background: var(--input-bg);">
-                                {{ substr($employee->name, 0, 2) }}
-                            </div>
+                            <img src="{{ $employee->avatar_url }}" alt="{{ $employee->name }}" class="rounded-circle shadow-sm border" style="width: 40px; height: 40px; object-fit: cover;">
                             <span class="fw-semibold text-body">{{ $employee->name }}</span>
                         </div>
                     </td>

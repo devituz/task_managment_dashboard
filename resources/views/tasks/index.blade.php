@@ -80,9 +80,7 @@
                     </td>
                     <td>
                         <div class="d-flex align-items-center gap-2">
-                            <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 32px; height: 32px; font-size: 0.75rem; background: var(--input-bg);">
-                                {{ substr($task->employee->name, 0, 1) }}
-                            </div>
+                            <img src="{{ $task->employee->avatar_url }}" alt="{{ $task->employee->name }}" class="rounded-circle border shadow-sm" style="width: 32px; height: 32px; object-fit: cover;">
                             <span class="small fw-medium">{{ $task->employee->name }}</span>
                         </div>
                     </td>
@@ -97,8 +95,11 @@
                         <span class="badge bg-{{ $s }} bg-opacity-10 text-{{ $s }} small">{{ \App\Models\Task::statusLabel($task->status) }}</span>
                     </td>
                     <td>
-                        <div class="small {{ $task->deadline && $task->deadline->isPast() && $task->status !== 'complete' ? 'text-danger fw-bold' : 'text-muted' }}">
-                            {{ $task->deadline ? $task->deadline->format('d M, Y') : '-' }}
+                        <div class="small text-muted mb-1" title="{{ __('app.start_date') }}">
+                            <i class="bi bi-play-circle me-1"></i> {{ $task->start_date ? $task->start_date->format('d M, H:i') : '-' }}
+                        </div>
+                        <div class="small {{ $task->deadline && $task->deadline->isPast() && $task->status !== 'complete' ? 'text-danger fw-bold' : 'text-muted' }}" title="{{ __('app.deadline') }}">
+                            <i class="bi bi-clock-history me-1"></i> {{ $task->deadline ? $task->deadline->format('d M, H:i') : '-' }}
                         </div>
                     </td>
                     <td class="text-end px-4">

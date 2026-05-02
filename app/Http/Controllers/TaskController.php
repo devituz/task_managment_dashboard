@@ -226,6 +226,7 @@ class TaskController extends Controller
             'user_id' => ['required', Rule::exists('users', 'id')->where('role', User::ROLE_EMPLOYER)],
             'priority' => ['required', Rule::in(Task::PRIORITIES)],
             'status' => ['required', Rule::in(Task::STATUSES)],
+            'start_date' => ['nullable', 'date'],
             'deadline' => ['nullable', 'date'],
         ]);
     }
