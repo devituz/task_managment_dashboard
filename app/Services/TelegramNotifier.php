@@ -36,7 +36,7 @@ class TelegramNotifier
 
         // 2. Agar xodimning shaxsiy Telegram ID si bo'lsa va u guruh ID sidan farq qilsa, unga ham alohida yuborish
         if ($employeeTelegramId && $employeeTelegramId !== $this->channelId) {
-            $this->sendRequest($employeeTelegramId, "🔔 *Sizga tegishli bildirishnoma:*\n\n" . $text);
+            $this->sendRequest($employeeTelegramId, "🔔 *Personal Notification:*\n\n" . $text);
         }
     }
 
@@ -56,59 +56,60 @@ class TelegramNotifier
 
     public function taskCreated(Task $task): void
     {
-        $priorityColor = ['low' => '🟢', 'medium' => '🟡', 'high' => '🔴'][$task->priority] ?? '⚪️';
-        
-        $text = "🆕 *YANGI TASK YARATILDI*\n\n";
-        $text .= "📌 *Sarlavha:* {$task->title}\n";
-        $text .= "👤 *Mas'ul xodim:* {$task->employee->name}\n";
-        $text .= "{$priorityColor} *Muhimlik:* " . Task::priorityLabel($task->priority) . "\n";
-        
-        if ($task->deadline) {
-            $text .= "⏰ *Muddat (Deadline):* " . $task->deadline->format('d-m-Y') . "\n";
-        }
-        
-        $text .= "\n*Batafsil ma'lumot tizimda.*";
+        $priorityLabel = Task::priorityLabel($task->priority);
+        $description = strip_tags($task->description);
+        $shortDescription = mb_strlen($description) > 100 ? mb_substr($description, 0, 100) . '...' : $description;
+        $dashboardUrl = config('app.url') . "/tasks/" . $task->id;
+
+        $text = "🆕 NEW TASK\n\n";
+        $text .= "*Title:* {$task->title}\n";
+        $text .= "*Descriptions:* {$shortDescription}\n";
+        $text .= "*Employee:* {$task->employee->name}\n";
+        $text .= "*Priority:* {$priorityLabel}\n\n";
+        $text .= "🔗 *Dashboard:* [View]({$dashboardUrl})";
 
         $this->sendMessage($text, $task->employee->telegram_id);
     }
 
     public function statusChanged(Task $task, string $oldStatus): void
     {
-        $text = "🔄 *TASK STATUSI O'ZGARDI*\n\n";
-        $text .= "📌 *Sarlavha:* {$task->title}\n";
-        $text .= "👤 *Mas'ul:* {$task->employee->name}\n\n";
-        $text .= "📉 *Eski status:* " . Task::statusLabel($oldStatus) . "\n";
-        $text .= "📈 *Yangi status:* " . Task::statusLabel($task->status) . "\n";
+        $oldStatusLabel = Task::statusLabel($oldStatus);
+        $newStatusLabel = Task::statusLabel($task->status);
+
+        $text = "STATUS UPDATED\n\n";
+        $text .= "Title: {$task->title}\n";
+        $text .= "Employee: {$task->employee->name}\n\n";
+        $text .= "{$oldStatusLabel} → {$newStatusLabel}";
 
         $this->sendMessage($text, $task->employee->telegram_id);
     }
 
     public function taskCompleted(Task $task): void
     {
-        $text = "✅ *TASK TO'LIQ YAKUNLANDI (COMPLETE)*\n\n";
-        $text .= "📌 *Sarlavha:* {$task->title}\n";
-        $text .= "👤 *Boshqargan xodim:* {$task->employee->name}\n";
-        $text .= "🎉 *Tabriklaymiz, vazifa muvaffaqiyatli yopildi!*\n";
+        $text = "TASK COMPLETED\n\n";
+        $text .= "Title: {$task->title}\n";
+        $text .= "Employee: {$task->employee->name}\n";
+        $text .= "The task has been successfully closed.";
 
         $this->sendMessage($text, $task->employee->telegram_id);
     }
 
     public function taskDeleted(Task $task, string $deletedBy): void
     {
-        $text = "🗑 *TASK O'CHIRILDI / BEKOR QILINDI*\n\n";
-        $text .= "📌 *Sarlavha:* {$task->title}\n";
-        $text .= "👤 *Mas'ul edi:* {$task->employee->name}\n";
-        $text .= "👮‍♂️ *O'chirdi:* {$deletedBy}\n";
+        $text = "TASK DELETED / CANCELLED\n\n";
+        $text .= "Title: {$task->title}\n";
+        $text .= "Was assigned to: {$task->employee->name}\n";
+        $text .= "Deleted by: {$deletedBy}";
 
         $this->sendMessage($text, $task->employee->telegram_id);
     }
 
     public function commentAdded(Task $task, TaskComment $comment): void
     {
-        $text = "💬 *TASKGA YANGI IZOH YOZILDI*\n\n";
-        $text .= "📌 *Task:* {$task->title}\n";
-        $text .= "✍️ *Yozuvchi:* {$comment->user->name}\n\n";
-        $text .= "📝 *Izoh:* _{$comment->comment}_\n";
+        $text = "NEW COMMENT ADDED\n\n";
+        $text .= "Task: {$task->title}\n";
+        $text .= "Author: {$comment->user->name}\n\n";
+        $text .= "Comment: {$comment->comment}";
 
         // Agar izohni boshqa odam yozgan bo'lsa (masalan admin), xodimga xabar ketishi kerak
         $targetTelegramId = $task->employee->telegram_id;
@@ -122,10 +123,10 @@ class TelegramNotifier
 
     public function fileUploaded(Task $task, string $fileName, string $uploaderName): void
     {
-        $text = "📎 *TASKGA FAYL BIRIKTIRILDI*\n\n";
-        $text .= "📌 *Task:* {$task->title}\n";
-        $text .= "📁 *Fayl nomi:* {$fileName}\n";
-        $text .= "👤 *Yukladi:* {$uploaderName}\n";
+        $text = "FILE ATTACHED TO TASK\n\n";
+        $text .= "Task: {$task->title}\n";
+        $text .= "File name: {$fileName}\n";
+        $text .= "Uploaded by: {$uploaderName}";
 
         $this->sendMessage($text, $task->employee->telegram_id);
     }
