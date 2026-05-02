@@ -1,4 +1,4 @@
-FROM php:8.3.20-fpm AS builder
+FROM php:8.4-fpm AS builder
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
@@ -38,14 +38,15 @@ RUN apt-get update \
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 
-FROM php:8.3.20-fpm
+FROM php:8.4-fpm
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
-       libzip4 \
+       libzip5 \
        libjpeg62-turbo \
-       libpng16-16 \
+       libpng16-16t64 \
        libfreetype6 \
+       libicu76 \
        libpq5 \
   && rm -rf /var/lib/apt/lists/*
 

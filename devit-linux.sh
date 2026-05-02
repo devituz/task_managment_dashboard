@@ -39,13 +39,13 @@ else
 fi
 
 if ! command -v php &> /dev/null; then
-    echo "PHP is not installed. Installing PHP 8.3.20..."
+    echo "PHP is not installed. Installing PHP 8.4..."
 
     sudo apt-get update
     sudo apt-get install -y software-properties-common
     sudo add-apt-repository ppa:ondrej/php
     sudo apt-get update
-    sudo apt-get install -y php8.3 php8.3-cli php8.3-common php8.3-mbstring php8.3-xml php8.3-zip php8.3-curl
+    sudo apt-get install -y php8.4 php8.4-cli php8.4-common php8.4-mbstring php8.4-xml php8.4-zip php8.4-curl
 
     if [ $? -ne 0 ]; then
         echo "Failed to install PHP. Exiting."

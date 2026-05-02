@@ -23,29 +23,29 @@ services:
                 condition: service_healthy
         restart: unless-stopped
 
-    scheduler:
-        build:
-            context: .
-            dockerfile: Dockerfile
-        container_name: ${DOCKER_CONTAINER_NAME}_scheduler
-        command: sh -c "while [ true ]; do php artisan schedule:run --verbose --no-interaction; sleep 60; done"
-        volumes:
-            - .:/var/www/html
-        depends_on:
-            postgres:
-                condition: service_healthy
-            redis:
-                condition: service_healthy
-        networks:
-            - devituz
-        restart: unless-stopped
+#    scheduler:
+#        build:
+#            context: .
+#            dockerfile: Dockerfile
+#        container_name: ${DOCKER_CONTAINER_NAME}_scheduler
+#        command: sh -c "while [ true ]; do php artisan schedule:run --verbose --no-interaction; sleep 60; done"
+#        volumes:
+#            - .:/var/www/html
+#        depends_on:
+#            postgres:
+#                condition: service_healthy
+#            redis:
+#                condition: service_healthy
+#        networks:
+#            - devituz
+#        restart: unless-stopped
 
     nginx:
         image: nginx:1.25-alpine
         container_name: ${DOCKER_CONTAINER_NAME}_nginx
         ports:
-            - '${APP_PORT:-8000}:80'
-            - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
+            - '${APP_PORT:-9635}:80'
+            - '${VITE_PORT:-5185}:${VITE_PORT:-5185}'
         volumes:
             - .:/var/www/html
             - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
@@ -55,30 +55,30 @@ services:
             - devituz
         restart: unless-stopped
 
-    horizon:
-        build:
-            context: .
-            dockerfile: Dockerfile
-            args:
-                WWWGROUP: '${WWWGROUP:-1000}'
-        container_name: ${DOCKER_CONTAINER_NAME}_horizon
-        command: php artisan horizon
-        volumes:
-            - .:/var/www/html
-        networks:
-            - devituz
-        depends_on:
-            postgres:
-                condition: service_healthy
-            redis:
-                condition: service_healthy
-        restart: unless-stopped
+#    horizon:
+#        build:
+#            context: .
+#            dockerfile: Dockerfile
+#            args:
+#                WWWGROUP: '${WWWGROUP:-1000}'
+#        container_name: ${DOCKER_CONTAINER_NAME}_horizon
+#        command: php artisan horizon
+#        volumes:
+#            - .:/var/www/html
+#        networks:
+#            - devituz
+#        depends_on:
+#            postgres:
+#                condition: service_healthy
+#            redis:
+#                condition: service_healthy
+#        restart: unless-stopped
 
     postgres:
         image: postgres:16-alpine
         container_name: ${DOCKER_CONTAINER_NAME}_postgres
         ports:
-            - '${FORWARD_DB_PORT:-5432}:5432'
+            - '${FORWARD_DB_PORT:-5435}:5432'
         environment:
             POSTGRES_DB: '${DB_DATABASE}'
             POSTGRES_USER: '${DB_USERNAME}'
@@ -114,7 +114,7 @@ services:
         image: redis:7.2-alpine
         container_name: ${DOCKER_CONTAINER_NAME}_redis
         ports:
-            - '${FORWARD_REDIS_PORT:-6379}:6379'
+            - '${FORWARD_REDIS_PORT:-6385}:6379'
         volumes:
             - redis-data:/data
         command: [
@@ -139,17 +139,17 @@ services:
             retries: 5
             start_period: 10s
 
-    go-ws:
-        build:
-            context: ./go-ws
-        container_name: delgo_go_ws
-        ports:
-            - "8081:8081"
-        depends_on:
-            redis:
-                condition: service_healthy
-        networks:
-            - devituz
+#    go-ws:
+#        build:
+#            context: ./go-ws
+#        container_name: delgo_go_ws
+#        ports:
+#            - "8081:8081"
+#        depends_on:
+#            redis:
+#                condition: service_healthy
+#        networks:
+#            - devituz
 
 
 
